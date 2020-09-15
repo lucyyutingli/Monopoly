@@ -22,21 +22,22 @@ class Colored_Properties:
         self.dict = {"owner": "None", "current houses": 0}
 
 class Railroads:
-    def __init__():
+    def __init__(self):
         self.cost = 200
         self.rent = 25
         self.owner = "None"
 
 class Utilities:
-    def __init__():
+    def __init__(self):
         self.cost = 150
         self.owner = "None"
 
 
 # Initizliaing all properties. Names will be replaced with characater numbers to bring down run time and memory required.
-# Remember the following:
-#   - Monopoly rents are double the normal rent
+# Note the following:
+#   - Monopoly rents are double the normal rent for colored properties
 #   - Mortgages are half the intial cost
+#   - Chance spaces don't need their own class or variable, it will be a simple check
 
 
 # Browns
@@ -88,9 +89,13 @@ ec = Utilities()
 ww = Utilities()
 
 
+
+
 # Breaking up the board into 4 arrays. There is no possible way you cannot hard-code the Monopoly board, because it never changes. 
-# First quarter of the board starting with Go. 
-board_one = ["Go", ]
+board_one = ["Go", med_ave, "Community Chest", bal_ave, "Income Tax", read_rail, ori_ave, "Chance", ver_ave, conn_ave, "Jail"]
+board_two = ["Jail", stch_pl, ec, st_ave, vir_ave, penn_rail, stjm_pl, "Community Chest", ten_ave, ny_ave, "Free Parking"]
+board_three = ["Free Parking", ken_ave, "Chance", in_ave, ill_ave, bo_rail, at_ave, ven_ave, ww, mar_gar, "Go to Jail"]
+board_four = ["Go to Jail", pac_ave, nc_ave, "Community Chest", penn_ave, sl_rail, "Chance", pa_pl, "Luxury Tax", bw, "Go"]
 
 # Body -------------------------------------------------------------------------------------------------
 
@@ -100,12 +105,14 @@ print(banner)
 players_entered = False
 player_list = []
 
-# Getting player(s) information (and a bit of cheeky flaming)
+# Getting player(s) information (and a bit of cheeky flaming). Hard-coded for now, I'll try to figure out how to make this flexible in a later version
 while (players_entered == False):
     try:
         playernum = int(input("How many players are playing? (Supports 2-4 players): "))
+        print("\n")
     except ValueError:
-        print("Hey, no letters allowed. This is an integer only zone! Try again.")
+        print("Hey, no letters allowed. This is an integer only zone! Try again.\n")
+        continue
     if playernum == 1:
         print("Look, I get it, you wanna play by yourself, but that's not how this game works! This isn't Solitaire! " 
                 "Where's the fun in playing by yourself anyways? Sounds awfully lonely. Try again.\n")
@@ -166,48 +173,62 @@ while (players_entered == False):
 
 print ("\nThank you, the game will now begin. May the (RNG) odds be ever in your favor. \n")
 
-# Determining player order. This whole section seems a little more complicated than it needs to be right now, I will probably come back to it later.
+# DETERMINING PLAYER ORDER. 
+# This whole section seems a little more complicated than it needs to be right now, I will probably come back to it later.
 print("Determining turn order...\n")
 
-player_rolls = []
+# Creates a new list of player's rolls
+def new_roll_list(player_listed):
+    player_rolls = []
 
-for i in player_list:
-    roll = random.randint(2,12)
-    player_rolls.append((roll, i))
+    for i in player_listed:
+        roll = random.randint(2,12)
+        player_rolls.append((roll, i))
+    return player_rolls
+ 
+# Creates a new dictionary of player's rolls. Key: Value is Rolled Number: Players who rolled the number
+def new_roll_dict(roll_list):
+    player_roll_defaultdict = defaultdict(list) 
 
-#Check to see if any of the rolls are the same
+    for i in roll_list:    
+        player_roll_defaultdict[i[0]].append(i[1])
+
+    player_roll_dict = (player_roll_defaultdict)
+    player_roll_new_dict = defaultdict(list)
+
+
+    for i in sorted(player_roll_dict.keys(), reverse = True):
+        player_roll_new_dict[i].append(player_roll_dict.get(i))
+    return player_roll_new_dict
+
+# A function to check for duplicates within a roll dictionary
+def duplicate_check(player_num: int, rolls: dict, returned_list: list):
+    unique = 0
+    while(unique != player_num):
+        for i in rolls:
+            num_dup_players = len(rolls.get(i))
+            if num_dup_players > 1:
+                print("The following players got a duplicate roll of {}: {}. Resolving between the players...".format(i,rolls.get(i)))
+                dup_roll_dict = new_roll_dict(new_roll_list(num_dup_players))
+                duplicate_check(num_dup_players, dup_roll_dict, roll_order, returned_list)
+
+            else:
+                returned_list.append(rolls.get(i)[0][0])
+                unique += 1
+    return returned_list
+
+# Create rolls, check for duplicates, return player order 
+player_rolls = new_roll_list(player_list)
 
 print("Original rolls listed:")
 for i in player_rolls:
     print("{} got a roll of {}. ".format(i[1].dict["name"], i[0]))
 
 print("\n")
- 
-player_roll_dict = defaultdict(list) 
 
-final_roll_order = []
-for i in player_rolls:    
-    player_roll_dict[i[0]].append(i[1])
+player_roll_dict = new_roll_dict(player_rolls)
 
-sorted(player_roll_dict.keys())
-
-
-unique = 0
-while(unique!= playernum):
-    for i in player_roll_dict:
-        if len(player_roll_dict.get(i)) > 1:
-            print("The following players got a duplicate roll of {}: {}. Resolving between the players...".format(i,player_roll_dict.get(i)))
-
-            reroll_list = []
-            for j in (player_roll_dict.get(i)):
-                reroll_list.append(random.randint(2,12), j)
-
-            reroll_list.sort()
-            final_roll_order.extend(reroll_list)
-            unique += len(reroll_list)
-        else:
-            final_roll_order.append(player_roll_dict.get(i)[0])
-            unique += 1
+final_roll_order = duplicate_check(playernum, player_roll_dict, [])
 
 
 # Final player order
