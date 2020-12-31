@@ -1,7 +1,7 @@
 # Monopoly Without the Pain
 This quarantine season I played a few games of Monopoly with my friends online. They games were fun, but they were sometimes painstakingly long and there were moments where our friendships were on their last legs. I thought, "wouldn't it be great if you could play Monopoly without *playing* Monopoly"? That's when I got the idea to create a Monopoly simulation, that goes through an entire game of Monopoly with no human input other than the names of the players. This simulation would complete everything like dice rolls, property buying, etc. and players can just watch it happen through print messages on the screen. Instead of playing Monopoly for hours, you could watch it happen in minutes. I call this **Monopoly Without the Pain**.
 
-This project was started on **9/11/2020** and is impelemented in **Python 3**.
+This project was started on **9/11/2020** and is impelemented in **Python 3**. As always, please let me know if you have any suggesstions for improvement. I am always open to comments and critiques!
 
 ## **Requirements**
 This is both for the user and myself to keep track of gameplay aspects of Monopoly that will need to be included. The game of Monopoly is both simple and complex at the same time, so I wanted to focus on the most important aspects of the game first. Below are lists of mechanics and their possible implementations, which are subject to change as I work through the project. 
@@ -42,7 +42,7 @@ This is both for the user and myself to keep track of gameplay aspects of Monopo
 ## **Omitted Game Mechanics and Assumptions**
 There are some game mechanics that don't really make sense when running a complete simulation of Monopoly. These include the following:
 - Trading
-    - If I want to have this experience completely user free, other than the names, I need to leave out any places where players could potentially change the path of the game. I don't have experience in AI (yet), so I at the moment I can't come up with an algorithm that could possibly guess what a player would. However, if I was to make a second version of this project, I could potentially add options to trade when the opportunity arrises.
+    - If I want to have this experience completely user free, other than the names, I need to leave out any places where players could potentially change the path of the game. I don't have experience in AI (yet), so I at the moment I can't come up with an algorithm that could possibly guess what a player would do. However, if I was to make a second version of this project, I could potentially add options to trade when the opportunity arrises.
 - Getting out of jail
     - There are moments in late-game of Monopoly where players want to acutally stay in jail in order to avoid having to pay higher rent fees. In this version, I am going to be assuming that players will want to get out of jail as soon as possible. A later version could include an algorithm that decides whether or not to stay in jail. For this version, I will have players pay the 50$ to leave jail, unless they do not have the money, in which they will roll to attempt to be free. 
 - Buying as many houses and hotels as possible
@@ -58,4 +58,4 @@ Listed here are a few things that I would want to add to a future version, if I 
 
 - Mortgaging
 - Trading
-- A better idea of trading
+- Trading to stay in the game when you're out of money
